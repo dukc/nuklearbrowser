@@ -1,7 +1,7 @@
 This is a simple local file browser for the backend-agnostic
 [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) GUI library. It
-is a [D](https://dlang.org) translation (with some major changes) from [example file of the original library]
-(https://github.com/Immediate-Mode-UI/Nuklear/blob/master/example/file_browser.c).
+is a [D](https://dlang.org) translation (with some major changes) from
+[example file of the original library](https://github.com/Immediate-Mode-UI/Nuklear/blob/master/example/file_browser.c).
 Interfacing is handled by [BindBC-Nuklear](https://github.com/Timu5/bindbc-nuklear).
 
 The file browser is currently primitive. It should work, but you'll likely
