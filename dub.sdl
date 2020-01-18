@@ -1,0 +1,6 @@
+name "nuklearbrowser"
+description "A file browser for Nuklear GUI library"
+authors "Ate Eskola"
+copyright "Copyright © 2020, Ate Eskola"
+license "Boost"
+dependency "bindbc-nuklear" version="~>0.4.0"

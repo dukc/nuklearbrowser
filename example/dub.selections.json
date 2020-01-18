@@ -1,0 +1,11 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"bindbc-loader": "0.2.1",
+		"bindbc-nuklear": "0.4.0",
+		"bindbc-opengl": "0.9.0",
+		"bindbc-sdl": "0.10.1",
+		"imagefmt": "2.0.3",
+		"nuklearbrowser": {"path":".."}
+	}
+}
