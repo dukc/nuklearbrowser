@@ -22,7 +22,7 @@ int main()
     {	writeln("Nuklear library (.so or .dll) missing");
 		return 1;
 	}
-    if (SDL_Init(SDL_INIT_VIDEO) == -1)
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) == -1)
     {	writeln(text("Error: failed to init SDL: ", SDL_GetError().fromStringz));
 		return 1;
 	}
