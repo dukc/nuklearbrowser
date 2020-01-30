@@ -12,7 +12,7 @@ int main()
     switch (loadSDL)
     {   case sdlSupport: break;
         case SDLSupport.badLibrary:
-			writeln("SDL2-kirjasto (.so or .dll) only partially loaded. Most probably too old version of it.");
+			writeln("SDL2 library (.so or .dll) only partially loaded. Most probably too old version of it.");
 			return 1;
         default:
 			writeln("Could not find SDL2 library! (.so or .dll)");
