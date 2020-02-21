@@ -188,13 +188,13 @@ Algebraic!(bool, const(char)[]) run(ref FileBrowser browser, ref nk_context ctx)
 	nk_layout_row(&ctx, NK_DYNAMIC, totalSpace.h, 2, ratio.ptr);
 	nk_group_begin(&ctx, "Special", NK_WINDOW_NO_SCROLLBAR);
 	{	nk_layout_row_dynamic(&ctx, 40, 1);
-		if (browser.firstFrameExecuted && browser.home.length && nk_button_image_label(&ctx, browser.media.icons.home, "Home", NK_TEXT_CENTERED))
+		if (browser.firstFrameExecuted && browser.home.length && nk_button_image_label(&ctx, browser.media.icons.home, "Koti", NK_TEXT_CENTERED))
 		{	browser.loadDirectory(browser.home);
 		}
-		if (browser.firstFrameExecuted && nk_button_image_label(&ctx, browser.media.icons.workingDirectory, "Working dir", NK_TEXT_CENTERED))
+		if (browser.firstFrameExecuted && nk_button_image_label(&ctx, browser.media.icons.workingDirectory, "Työkansio", NK_TEXT_CENTERED))
 		{	browser.loadDirectory(getcwd);
 		}
-		if (browser.firstFrameExecuted && nk_button_label(&ctx, "Cancel"))
+		if (browser.firstFrameExecuted && nk_button_label(&ctx, "Peru"))
 		{	result = true;
 		}
 		nk_group_end(&ctx);
