@@ -204,7 +204,7 @@ Algebraic!(bool, const(char)[]) run(ref FileBrowser browser, ref nk_context ctx)
 	nk_group_begin(&ctx, "Content", 0);
 	{	immutable count = browser.directories.length + browser.files.length;
 		enum cols = 4;
-		immutable rows = count / cols;
+		immutable rows = (count + cols - 1) / cols;
 		Unqual!(typeof(count)) index = count;
 		foreach (i; 0 .. rows)
 		{	nk_layout_row_dynamic(&ctx, 135, cast(int)cols);
