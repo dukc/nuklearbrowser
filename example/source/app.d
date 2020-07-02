@@ -18,8 +18,9 @@ int main()
 			writeln("Could not find SDL2 library! (.so or .dll)");
 			return 1;
     }
-    if (not(loadNuklear == NuklearSupport.Nuklear4))
-    {	writeln("Nuklear library (.so or .dll) missing");
+    const nukSupport = loadNuklear;
+    if (not(nukSupport == NuklearSupport.Nuklear4))
+    {	writeln("Nuklear library (.so or .dll) missing, nukSupport == ", nukSupport);
 		return 1;
 	}
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) == -1)

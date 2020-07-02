@@ -7,4 +7,9 @@ dependency "nuklearbrowser" path="./.."
 dependency "bindbc-opengl" version="~>0.9.0"
 dependency "bindbc-sdl" version="~>0.10.1"
 dependency "imagefmt" version="~>2.0.3"
-versions "GL_30" "SDL_205" "NK_ALL"
+configuration "application" {
+	targetType "executable"
+	lflags "-rpath=./lib" platform="posix"
+}
+       
+versions "GL_40" "SDL_205" "NK_ALL"
