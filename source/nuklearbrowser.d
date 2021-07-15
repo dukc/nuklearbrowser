@@ -14,7 +14,7 @@ struct Icons
     nk_image musicFile;
     nk_image fontFile;
     nk_image imgFile;
-    
+
     ref nk_image opIndex(FileGroupId i)
     {	final switch (i)
 		{	case FileGroupId._default: return defaultFile;
@@ -38,7 +38,7 @@ enum FileTypeId
 
 enum FileGroupId {_default, text, music, font, image};
 
-struct FileType  
+struct FileType
 {	const(char)[] suffix;
     FileGroupId group;
 }
@@ -100,7 +100,7 @@ Media makeMedia(Icons icons)
     media.files.tga = FileType(".tga", FileGroupId.image);
     media.files.gif = FileType(".gif", FileGroupId.image);
     media.files.svg = FileType(".svg", FileGroupId.image);
-    
+
     return media;
 }
 
@@ -109,13 +109,12 @@ private void loadDirectory(ref FileBrowser browser, const(char)[] path)
 	auto directoryStuff= path.idup
     .dirEntries(SpanMode.shallow).map!(de => de.name)
     .array
-    //An invalid symlink would crash the browser. Here is a
-    //quick-and dirty solution that just hides all symlinks.
-    .adjoin!
-    (	entryNames => entryNames.filter!(en => !en.isSymlink && en.isFile).array,
-		entryNames => entryNames.filter!(en => !en.isSymlink && en.isDir).array
-	);
-	
+    .fold!((string[][2] acc, string en)
+    {   try acc[en.isDir] ~= en;
+        catch(FileException){} //Most likely a broken symlink
+        return acc;
+    })(string[][2].init);
+
     browser.files=
     directoryStuff[0]
     .zip(browser.suffixFilter.repeat)
@@ -123,7 +122,7 @@ private void loadDirectory(ref FileBrowser browser, const(char)[] path)
     .map!(x=>x[0].to!(const(char)[]))
     .array;
     browser.directories = directoryStuff[1].to!(const(char)[][]);
-    
+
     browser.files.sort;
     browser.directories.sort;
 }
@@ -222,7 +221,7 @@ Algebraic!(bool, const(char)[]) run(ref FileBrowser browser, ref nk_context ctx)
 					}
 				}
 			}
-			
+
 			nk_layout_row_dynamic(&ctx, 20, cast(int)cols);
 			foreach (k; i*cols .. (i*cols+cols).min(count)) {
 				/* draw one row of labels */
@@ -246,7 +245,7 @@ Algebraic!(bool, const(char)[]) run(ref FileBrowser browser, ref nk_context ctx)
 		if (index < count) browser.loadDirectory(browser.directories[index]);
 		nk_group_end(&ctx);
 	}
-    
+
     browser.firstFrameExecuted = true;
     return result;
 }

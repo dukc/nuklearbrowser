@@ -8,7 +8,6 @@ The file browser is currently primitive. It should work, but you'll likely
 want to use it only as a base for your own modification. Known limitations:
 
 * Can only search the current drive -no going to explore your USB stick
-* Cannot follow (nor open) link files
 * Long texts do not warp
 * Limited images for different file types
 * Almost guaranteed to have serious bugs
