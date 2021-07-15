@@ -242,6 +242,7 @@ void render(ref NkSdl sdl, nk_anti_aliasing AA, int max_vertex_buffer, int max_e
          offset += cmd.elem_count;
       });
       nk_clear(&sdl.ctx);
+      nk_buffer_clear(&sdl.ogl.cmds);
    }
 
    glUseProgram(0);
