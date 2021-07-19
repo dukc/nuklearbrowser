@@ -29,16 +29,18 @@ struct NkSdlVertex
 };
 
 struct NkSdl
-{  SDL_Window *win;
+{  SDL_Window* win;
    NkSdlDevice ogl;
    nk_context ctx;
    nk_font_atlas atlas;
 }
 
+alias GlString = immutable(GLchar)*;
+
 NkSdlDevice makeNkSdlDevice()
-{  NkSdlDevice result;
+{  typeof(return) result;
    GLint status;
-   const(GLchar*) vertex_shader=
+   GlString vertex_shader=
    q{ #version 300 es
       uniform mat4 ProjMtx;
       in vec2 Position;
@@ -46,14 +48,14 @@ NkSdlDevice makeNkSdlDevice()
       in vec4 Color;
       out vec2 Frag_UV;
       out vec4 Frag_Color;
-      void main() {
-         Frag_UV = TexCoord;
+      void main()
+      {  Frag_UV = TexCoord;
          Frag_Color = Color;
          gl_Position = ProjMtx * vec4(Position.xy, 0, 1);
       }
    };
 
-   const(GLchar*) fragment_shader=
+   GlString fragment_shader=
    q{ #version 300 es
       precision mediump float;
       uniform sampler2D Texture;
@@ -119,7 +121,7 @@ NkSdlDevice makeNkSdlDevice()
    return result;
 }
 
-void uploadAtlas(ref NkSdlDevice dev, const void *image, int width, int height)
+void uploadAtlas(ref NkSdlDevice dev, const void* image, int width, int height)
 {  glGenTextures(1, &dev.font_tex);
    glBindTexture(GL_TEXTURE_2D, dev.font_tex);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -138,6 +140,8 @@ void free(ref NkSdlDevice dev)
    glDeleteBuffers(1, &dev.vbo);
    glDeleteBuffers(1, &dev.ebo);
    nk_buffer_free(&dev.cmds);
+
+   dev = dev.init;
 }
 
 int[2] size(SDL_Window* window)
@@ -151,7 +155,7 @@ void render(ref NkSdl sdl, nk_anti_aliasing AA, int max_vertex_buffer, int max_e
    import core.stdc.string;
    int width, height;
    int display_width, display_height;
-   nk_vec2 scale;
+
    GLfloat[4][4] ortho = [
       [2.0f, 0.0f, 0.0f, 0.0f],
       [0.0f,-2.0f, 0.0f, 0.0f],
@@ -163,8 +167,10 @@ void render(ref NkSdl sdl, nk_anti_aliasing AA, int max_vertex_buffer, int max_e
    ortho[0][0] /= cast(GLfloat)width;
    ortho[1][1] /= cast(GLfloat)height;
 
-   scale.x = display_width/cast(float)width;
-   scale.y = display_height/cast(float)height;
+   nk_vec2 scale =
+   {  x: display_width / cast(float)width,
+      y: display_height / cast(float)height
+   };
 
    /* setup global state */
    glViewport(0,0,display_width,display_height);
@@ -209,7 +215,7 @@ void render(ref NkSdl sdl, nk_anti_aliasing AA, int max_vertex_buffer, int max_e
             {nk_draw_vertex_layout_attribute.NK_VERTEX_COLOR, nk_draw_vertex_layout_format.NK_FORMAT_R8G8B8A8, NkSdlVertex.col.offsetof},
             NK_VERTEX_LAYOUT_END
          ];
-         memset(&config, 0, config.sizeof);
+
          config.vertex_layout = vertex_layout.ptr;
          config.vertex_size = NkSdlVertex.sizeof;
          config.vertex_alignment = NkSdlVertex.alignof;
@@ -258,7 +264,6 @@ nk_image loadIcon(const(char)[] fileName)
    //a separate library binary, so for sake of example I felt it was
    //a better choice.
    import imagefmt;
-   import std.stdio;
 
    auto image = fileName.read_image(4);
    uint textureId;
@@ -421,10 +426,8 @@ int handleEvent (ref NkSdl sdl, SDL_Event *evt)
 }
 
 void shutdown(ref NkSdl sdl)
-{  import core.stdc.string;
-
-   nk_font_atlas_clear(&sdl.atlas);
+{  nk_font_atlas_clear(&sdl.atlas);
    nk_free(&sdl.ctx);
    sdl.ogl.free;
-   memset(&sdl, 0, sdl.sizeof);
+   sdl = sdl.init;
 }
