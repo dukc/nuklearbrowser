@@ -9,8 +9,7 @@ want to use it only as a base for your own modification. Known limitations:
 
 * Can only search the current drive -no going to explore your USB stick
 * Long texts do not warp
-* Limited images for different file types
-* Almost guaranteed to have serious bugs
+* Likely to have serious bugs
 
 Currently tested on 64bit Linux and [Wine](https://www.winehq.org/) as 32bit.
 Boost Licensed.

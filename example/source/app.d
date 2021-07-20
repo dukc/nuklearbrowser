@@ -62,22 +62,6 @@ int main()
 
    nk_colorf bg= {r: 0.10f, g: 0.18f, b: 0.24f, a: 1.0f};
 
-   auto browserMedia = new Media;
-   if (true)
-   {  Icons icons =
-      {  home: loadIcon("icon/home.png"),
-         directory: loadIcon("icon/directory.png"),
-         workingDirectory: loadIcon("icon/workingdirectory.png"),
-         root: loadIcon("icon/root.png"),
-         defaultFile: loadIcon("icon/default.png"),
-         textFile: loadIcon("icon/text.png"),
-         musicFile: loadIcon("icon/music.png"),
-         fontFile: loadIcon("icon/font.png"),
-         imgFile: loadIcon("icon/image.png"),
-      };
-      *browserMedia = icons.makeMedia;
-   }
-
    scope(exit)
    {  guiStatus.shutdown();
       SDL_GL_DeleteContext(glContext);
@@ -85,7 +69,33 @@ int main()
       SDL_Quit();
    }
 
-   auto browser= makeFileBrowser(*browserMedia).nullable;
+   auto browser= ()
+   {  static foreach(i, el; ["text", "music", "font", "image"])
+      {  mixin(format!q{enum size_t %s = %s;}(el, i));
+      }
+
+      Icons icons =
+      {  home: loadIcon("icon/home.png"),
+         directory: loadIcon("icon/directory.png"),
+         workingDirectory: loadIcon("icon/workingdirectory.png"),
+         root: loadIcon("icon/root.png"),
+         defaultFile: loadIcon("icon/default.png"),
+         files:
+         [  text: loadIcon("icon/text.png"),
+            music: loadIcon("icon/music.png"),
+            font: loadIcon("icon/font.png"),
+            image: loadIcon("icon/image.png"),
+         ],
+      };
+
+      size_t[string] suffixIcons=
+      [".txt":text, ".c":text, ".cpp":text, ".d":text, ".dpp":text, ".h":text,
+      ".hpp":text, ".di":text, ".mp3":music, ".wav":music, ".ogg":music,
+      ".ttf":font, ".bmp":image, ".png":image, ".jpg":image, ".pcx":image,
+      ".tga":image, ".gif":image, ".svg":image];
+
+      return makeFileBrowser(icons, suffixIcons).nullable;
+   }();
 
    eventloop: while (browser.hasValue)
    {  SDL_Event evt;
