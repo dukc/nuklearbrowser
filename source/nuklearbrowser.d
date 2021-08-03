@@ -89,6 +89,16 @@ FileBrowser makeFileBrowser(Icons icons, size_t[string] suffixMap,
     return browser;
 }
 
+unittest
+{   import std;
+
+    auto browser = makeFileBrowser(Icons.init, size_t[string].init, s=>s.empty);
+    browser.loadDirectory(getcwd.buildPath("testdir"));
+    assert(browser.files.sort.map!baseName.equal(["file1", "file2", "link1"]));
+    assert(browser.directories.map!baseName.equal(["dir1"]));
+    assert(!browser.firstFrameExecuted);
+}
+
 //Return value:
 //  false: browser still ongoing
 //  true: browser closed
